@@ -7,11 +7,16 @@
 
 import UIKit
 import Combine
+import PhotosUI
+import _PhotosUI_SwiftUI
 
 // MainActor means this ViewModel's state is managed on the main thread
 // ObservableObject means SwiftUI can observe this object for state changes
 @MainActor
 final class MainViewModel: ObservableObject {
+    // what did user select
+    @Published var selectedPhotoItem: PhotosPickerItem?
+    
     // what image did the user choose
     @Published var selectedImage: UIImage?
     
@@ -33,6 +38,32 @@ final class MainViewModel: ObservableObject {
         } catch {
             classifier = nil
             errorMessage = "Failed to load classification model."
+        }
+    }
+    
+    /// Function for loading selected image from selected item in PhotoPicker
+    func loadSelectedPhoto() async {
+        guard let selectedPhotoItem else {
+            return
+        }
+        
+        do {
+            guard let data = try await selectedPhotoItem.loadTransferable(type: Data.self)
+            else {
+                errorMessage = "Failed to load selected image"
+                return
+            }
+            
+            guard let image = UIImage(data: data) else {
+                errorMessage = "Failed to create image"
+                return
+            }
+            
+            selectedImage = image
+            classificationResult = nil
+            errorMessage = nil
+        } catch {
+            errorMessage = "Failed to load selected image"
         }
     }
     
@@ -63,5 +94,4 @@ final class MainViewModel: ObservableObject {
             errorMessage = "Failed to classify image."
         }
     }
-    
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct ContentView: View {
     
@@ -17,14 +18,34 @@ struct ContentView: View {
             Text("TrashSnap")
                 .font(.title)
             
-            Button("Load Test Image") {
-                guard let image = UIImage(
-                    named: "testGlass"
-                ) else {
-                    return
+            if let selectedImage = viewModel.selectedImage {
+                Image(uiImage: selectedImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity, maxHeight: 300)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+            } else {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.gray.opacity(0.15))
+                    .frame(height: 250)
+                    .overlay {
+                        VStack (spacing: 8){
+                            Image(systemName: "photo")
+                                .font(.largeTitle)
+                            
+                            Text("No Image selected")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+            }
+            
+            PhotosPicker(selection: $viewModel.selectedPhotoItem, matching: .images) {
+                Label("Choose Photo", systemImage: "photo")
+            }
+            .onChange(of: viewModel.selectedPhotoItem) {
+                Task {
+                    await viewModel.loadSelectedPhoto()
                 }
-                
-                viewModel.selectedImage = image
             }
             
             Button("Classify"){
