@@ -8,49 +8,43 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    // initialize view model
+    @StateObject private var viewModel = MainViewModel()
+    
     var body: some View {
         VStack (spacing: 20){
             Text("TrashSnap")
                 .font(.title)
             
-            Button("Test Pixel Buffer") {
+            Button("Load Test Image") {
                 guard let image = UIImage(
                     named: "testGlass"
                 ) else {
-                    print("Failed to load test image")
                     return
                 }
                 
-                do {
-                    let pixelBuffer = try ImagePreprocessor.makePixelBuffer(from: image)
-                    
-                    let classifier = try TrashClassifierService()
-                    
-                    let result = try classifier.classify(pixelBuffer: pixelBuffer)
-                    
-                    print("Top prediction: ", result.topPrediction.label)
-                    
-                    print("Confidence: ", String(
-                        format: "%.2f",
-                        result.topPrediction.probability * 100
-                    ))
-                    
-                    print("\nAll predictions:")
-
-                    for prediction in result.predictions {
-
-                        print(
-                            "\(prediction.label): " +
-                            String(
-                                format: "%.2f%%",
-                                prediction.probability * 100
-                            )
-                        )
-                    }
-                    
-                } catch {
-                    print("Classification failed", error)
-                }
+                viewModel.selectedImage = image
+            }
+            
+            Button("Classify"){
+                viewModel.classifySelectedImage()
+            }
+            .disabled(viewModel.selectedImage == nil || viewModel.isClassifying)
+            
+            if viewModel.isClassifying {
+                ProgressView("Classifying...")
+            }
+            
+            if let result = viewModel.classificationResult {
+                
+                Text("Prediction: \(result.topPrediction.label)")
+                
+                Text(String(format: "Confidence: %.2f%%", result.topPrediction.probability * 100))
+            }
+            
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
             }
         }
         .padding()
