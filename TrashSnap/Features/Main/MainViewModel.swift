@@ -94,4 +94,13 @@ final class MainViewModel: ObservableObject {
             errorMessage = "Failed to classify image."
         }
     }
+    
+    func setSelectedImage(
+        _ image: UIImage
+    ) {
+
+        selectedImage = image
+        classificationResult = nil
+        errorMessage = nil
+    }
 }

@@ -5,32 +5,35 @@
 //  Created by Evelin Alim Natadjaja on 28/08/26.
 //
 
-import SwiftUI
 import PhotosUI
+import SwiftUI
 
 struct ContentView: View {
-    
+
     // initialize view model
     @StateObject private var viewModel = MainViewModel()
-    
+
     // navigation to result view
     @State private var showResult = false
-    
+    @State private var showCamera = false
+
     var body: some View {
         NavigationStack {
-            VStack (spacing: 40){
-                
+            VStack(spacing: 40) {
+
                 // App title
-                VStack (spacing: 10) {
+                VStack(spacing: 10) {
                     Text("TrashSnap")
                         .font(.largeTitle)
                         .bold()
                         .foregroundStyle(.brandTeal)
-                    
-                    Text("Take a picture of your trash and \nfind out what type it is!")
-                        .font(.callout)
-                        .foregroundStyle(.gray)
-                        .multilineTextAlignment(.center)
+
+                    Text(
+                        "Take a picture of your trash and \nfind out what type it is!"
+                    )
+                    .font(.callout)
+                    .foregroundStyle(.gray)
+                    .multilineTextAlignment(.center)
                 }
 
                 // Image Area
@@ -41,7 +44,7 @@ struct ContentView: View {
                             .scaledToFill()
                             .frame(width: 224, height: 224)
                             .clipped()
-                            .overlay{
+                            .overlay {
                                 Rectangle()
                                     .stroke(.brandTeal, lineWidth: 2)
                             }
@@ -49,40 +52,59 @@ struct ContentView: View {
                         ImagePlaceholderView()
                     }
                 }
-                
-                HStack{
-                    // Photo source
-                    PhotosPicker(selection: $viewModel.selectedPhotoItem, matching: .images) {
-                        ImageSourceLabel(systemImage: "photo.on.rectangle")
-                    }
-                    .frame(width: 101)
-                    .onChange(of: viewModel.selectedPhotoItem) {
-                        Task {
-                            await viewModel.loadSelectedPhoto()
+
+                VStack(spacing: 23) {
+                    HStack(spacing: 22) {
+                        // Photo source
+                        PhotosPicker(
+                            selection: $viewModel.selectedPhotoItem,
+                            matching: .images
+                        ) {
+                            ImageSourceLabel(systemImage: "photo.on.rectangle")
                         }
+                        .frame(width: 101)
+                        .onChange(of: viewModel.selectedPhotoItem) {
+                            Task {
+                                await viewModel.loadSelectedPhoto()
+                            }
+                        }
+
+                        Button {
+                            showCamera = true
+                        } label: {
+                            ImageSourceLabel(systemImage: "camera")
+                        }
+                        .buttonStyle(.plain)
+                        .frame(width: 101)
                     }
-                }
-                
-                // Classify Button
-                Button {
-                    viewModel.classifySelectedImage()
-                    if viewModel.classificationResult != nil {
+
+                    // Classify Button
+                    Button {
+                        viewModel.classifySelectedImage()
+                        if viewModel.classificationResult != nil {
                             showResult = true
                         }
-                } label: {
-                    Text(viewModel.isClassifying ? "Classifying..." : "Classify")
+                    } label: {
+                        Text(
+                            viewModel.isClassifying
+                                ? "Classifying..." : "Classify"
+                        )
                         .font(.title3)
                         .fontWeight(.semibold)
                         .frame(maxWidth: 224, minHeight: 58)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.white)
+                    .background(
+                        viewModel.selectedImage == nil
+                            ? Color.gray.opacity(0.38) : .brandTeal
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .disabled(
+                        viewModel.selectedImage == nil
+                            || viewModel.isClassifying
+                    )
                 }
-                .buttonStyle(.plain)
-                .foregroundStyle(.white)
-                .background(
-                    viewModel.selectedImage == nil ? Color.gray.opacity(0.38) : .brandTeal
-                )
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .disabled(viewModel.selectedImage == nil || viewModel.isClassifying)
-                
                 if let errorMessage = viewModel.errorMessage {
                     Text(errorMessage)
                 }
@@ -92,11 +114,25 @@ struct ContentView: View {
                 isPresented: $showResult
             ) {
                 if let result = viewModel.classificationResult,
-                   let image = viewModel.selectedImage {
+                    let image = viewModel.selectedImage
+                {
                     ResultView(
                         image: image,
                         result: result
                     )
+                }
+            }
+            .fullScreenCover(
+                isPresented: $showCamera
+            ) {
+                ZStack {
+                    Color.black
+                        .ignoresSafeArea()
+
+                    CameraPicker { image in
+                        viewModel.setSelectedImage(image)
+                    }
+                    .ignoresSafeArea()
                 }
             }
         }
