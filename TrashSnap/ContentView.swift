@@ -10,6 +10,8 @@ import PhotosUI
 
 struct ContentView: View {
     
+    @State private var showCamera = false
+    
     // initialize view model
     @StateObject private var viewModel = MainViewModel()
     
@@ -19,6 +21,16 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             VStack (spacing: 40){
+                
+                Button("Open Camera") {
+                    showCamera = true
+                }
+                .fullScreenCover(
+                    isPresented: $showCamera
+                ) {
+
+                    CameraView()
+                }
                 
                 // App title
                 VStack (spacing: 10) {
