@@ -1,0 +1,53 @@
+{
+  "fill" : {
+    "automatic-gradient" : "display-p3:0.91942,0.96783,0.95733,1.00000"
+  },
+  "groups" : [
+    {
+      "blur-material" : null,
+      "layers" : [
+        {
+          "blend-mode" : "normal",
+          "fill" : {
+            "linear-gradient" : [
+              "display-p3:0.30047,0.42375,0.43617,1.00000",
+              "display-p3:0.14600,0.27441,0.28735,1.00000"
+            ],
+            "orientation" : {
+              "start" : {
+                "x" : 0.5,
+                "y" : 0
+              },
+              "stop" : {
+                "x" : 0.5,
+                "y" : 0.7
+              }
+            }
+          },
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "Layer 1.svg",
+          "name" : "Layer 1"
+        },
+        {
+          "glass" : true,
+          "image-name" : "Layer 2.svg",
+          "name" : "Layer 2"
+        }
+      ],
+      "lighting" : "individual",
+      "shadow" : {
+        "kind" : "layer-color",
+        "opacity" : 0.3
+      },
+      "specular" : false,
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.3
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : "shared"
+  }
+}

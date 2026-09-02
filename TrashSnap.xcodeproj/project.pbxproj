@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		785C21203047B71700DF3077 /* TrashSnapIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 785C211F3047B71700DF3077 /* TrashSnapIcon.icon */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		78F64F5A30412E1F00E3DD40 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		785C211F3047B71700DF3077 /* TrashSnapIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = TrashSnapIcon.icon; sourceTree = "<group>"; };
 		78F64F4C30412E1E00E3DD40 /* TrashSnap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrashSnap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		78F64F5930412E1F00E3DD40 /* TrashSnapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrashSnapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		78F64F6330412E1F00E3DD40 /* TrashSnapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrashSnapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,6 +84,7 @@
 				78F64F5C30412E1F00E3DD40 /* TrashSnapTests */,
 				78F64F6630412E1F00E3DD40 /* TrashSnapUITests */,
 				78F64F4D30412E1E00E3DD40 /* Products */,
+				785C211F3047B71700DF3077 /* TrashSnapIcon.icon */,
 			);
 			sourceTree = "<group>";
 		};
@@ -212,6 +218,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				785C21203047B71700DF3077 /* TrashSnapIcon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,8 +400,9 @@
 		78F64F6E30412E1F00E3DD40 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = TrashSnapIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G79F3S3U7C;
@@ -426,8 +434,9 @@
 		78F64F6F30412E1F00E3DD40 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = TrashSnapIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G79F3S3U7C;
