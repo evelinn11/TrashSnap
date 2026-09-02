@@ -7,6 +7,7 @@
 
 import PhotosUI
 import SwiftUI
+import Vision
 
 struct ContentView: View {
 
@@ -136,6 +137,117 @@ struct ContentView: View {
                 }
             }
         }
+    }
+    
+    private func compareClassificationMethods(
+        image: UIImage
+    ) {
+
+        do {
+
+            print("\n========================")
+            print("CLASSIFICATION COMPARISON")
+            print("========================")
+
+
+            // -------------------------
+            // Manual baseline
+            // -------------------------
+
+            let pixelBuffer =
+                try ImagePreprocessor
+                    .makePixelBuffer(
+                        from: image
+                    )
+
+            let manualClassifier =
+                try TrashClassifierService()
+
+            let manualResult =
+                try manualClassifier.classify(
+                    pixelBuffer: pixelBuffer
+                )
+
+            printResult(
+                name: "Manual",
+                result: manualResult
+            )
+
+
+            // -------------------------
+            // Vision classifier
+            // -------------------------
+
+            let visionClassifier =
+                try VisionTrashClassifierService()
+
+
+            // Scale Fill
+            let scaleFillResult =
+                try visionClassifier.classify(
+                    image: image,
+                    cropAndScaleOption: .scaleFill
+                )
+
+            printResult(
+                name: "Vision - Scale Fill",
+                result: scaleFillResult
+            )
+
+
+            // Scale Fit
+            let scaleFitResult =
+                try visionClassifier.classify(
+                    image: image,
+                    cropAndScaleOption: .scaleFit
+                )
+
+            printResult(
+                name: "Vision - Scale Fit",
+                result: scaleFitResult
+            )
+
+
+            // Center Crop
+            let centerCropResult =
+                try visionClassifier.classify(
+                    image: image,
+                    cropAndScaleOption: .centerCrop
+                )
+
+            printResult(
+                name: "Vision - Center Crop",
+                result: centerCropResult
+            )
+
+        } catch {
+
+            print(
+                "Comparison failed:",
+                error
+            )
+        }
+    }
+    
+    private func printResult(
+        name: String,
+        result: ClassificationResult
+    ) {
+
+        print("\n\(name)")
+
+        print(
+            "Prediction:",
+            result.topPrediction.label
+        )
+
+        print(
+            "Confidence:",
+            String(
+                format: "%.2f%%",
+                result.topPrediction.probability * 100
+            )
+        )
     }
 }
 
