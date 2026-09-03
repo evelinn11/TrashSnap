@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import PhotosUI
 import _PhotosUI_SwiftUI
+import Vision
 
 // MainActor means this ViewModel's state is managed on the main thread
 // ObservableObject means SwiftUI can observe this object for state changes
@@ -29,12 +30,12 @@ final class MainViewModel: ObservableObject {
     // did something go wrong
     @Published var errorMessage: String?
     
-    private var classifier: TrashClassifierService?
+    private var classifier: VisionTrashClassifierService?
     
     // load model once when the ViewModel is created
     init() {
         do {
-            classifier = try TrashClassifierService()
+            classifier = try VisionTrashClassifierService()
         } catch {
             classifier = nil
             errorMessage = "Failed to load classification model."
@@ -88,8 +89,7 @@ final class MainViewModel: ObservableObject {
         }
         
         do {
-            let pixelBuffer = try ImagePreprocessor.makePixelBuffer(from: selectedImage)
-            classificationResult = try classifier.classify(pixelBuffer: pixelBuffer)
+            classificationResult = try classifier.classify(image: selectedImage, cropAndScaleOption: .scaleFill)
         } catch {
             errorMessage = "Failed to classify image."
         }
